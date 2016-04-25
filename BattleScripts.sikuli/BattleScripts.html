@@ -1,0 +1,244 @@
+
+<html>
+   <head>
+      <style type="text/css">
+         .sikuli-code {
+            font-size: 20px;
+            font-family: "Osaka-mono", Monospace;
+            line-height: 1.5em;
+            display:table-cell;
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
+            width: 99%;   /* remove horizontal scroll-bar when viewing in IE7 */
+         }
+         .sikuli-code img {
+            vertical-align: middle;
+            margin: 2px;
+            border: 1px solid #ccc;
+            padding: 2px;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            -moz-box-shadow: 1px 1px 1px gray;
+            -webkit-box-shadow: 1px 1px 2px gray;
+         }
+         .kw {
+            color: blue;
+         }
+         .skw {
+            color: rgb(63, 127, 127);
+         }
+
+         .str {
+            color: rgb(128, 0, 0);
+         }
+
+         .dig {
+            color: rgb(128, 64, 0);
+         }
+
+         .cmt {
+            color: rgb(200, 0, 200);
+         }
+
+         h2 {
+            display: inline;
+            font-weight: normal;
+         }
+
+         .info {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            display: none;
+         }
+
+         a {
+            color: #9D2900;
+         }
+
+         body {
+            font-family: "Trebuchet MS", Arial, Sans-Serif;
+         }
+
+      </style>
+   </head>
+<body>
+<div class="info">
+<h2>BattleScripts.sikuli</h2> <a href="BattleScripts.zip">(Download this script)</a>
+</div>
+<pre class="sikuli-code">
+<span class="kw">import</span> java
+<span class="kw">import</span> sys
+<span class="kw">from</span> javax.swing <span class="kw">import</span> JFrame
+<span class="kw">from</span> javax.swing <span class="kw">import</span> JButton
+<span class="kw">from</span> javax.swing <span class="kw">import</span> JPanel
+<span class="kw">from</span> javax.swing <span class="kw">import</span> BoxLayout
+<span class="kw">from</span> java.awt <span class="kw">import</span> EventQueue
+<span class="kw">from</span> java.lang <span class="kw">import</span> *
+
+<span class="kw">from</span> java.util <span class="kw">import</span> Timer
+<span class="kw">from</span> java.util <span class="kw">import</span> TimerTask
+
+<span class="kw">from</span> threading <span class="kw">import</span> Thread
+<span class="kw">import</span> random
+
+mode = <span class="dig">0</span>
+mouse_pos = None
+
+alliance_pos = [
+        Location(<span class="dig">1194</span>, <span class="dig">592</span>)
+        <span class="cmt">#Location(1097, 613), Location(1194, 592),Location(1291, 576), #1</span>
+        <span class="cmt">#Location(1149, 670),Location(1267, 646),Location(1362, 622),  #2</span>
+        ]
+enemy_pos = [
+        Location(<span class="dig">899</span>, <span class="dig">519</span>),Location(<span class="dig">1007</span>, <span class="dig">502</span>),Location(<span class="dig">1108</span>, <span class="dig">492</span>),Location(<span class="dig">1202</span>, <span class="dig">481</span>),Location(<span class="dig">1286</span>, <span class="dig">465</span>), <span class="cmt">#1</span>
+        Location(<span class="dig">868</span>, <span class="dig">457</span>),Location(<span class="dig">964</span>, <span class="dig">454</span>),Location(<span class="dig">1047</span>, <span class="dig">443</span>),Location(<span class="dig">1130</span>, <span class="dig">434</span>),Location(<span class="dig">1201</span>, <span class="dig">426</span>), <span class="cmt">#2</span>
+        Location(<span class="dig">850</span>, <span class="dig">421</span>),Location(<span class="dig">934</span>, <span class="dig">417</span>),Location(<span class="dig">1003</span>, <span class="dig">409</span>),Location(<span class="dig">1035</span>, <span class="dig">400</span>),Location(<span class="dig">1100</span>, <span class="dig">395</span>) <span class="cmt">#3</span>
+        ]
+<span class="cmt"># Check app pos, Left, Bottom, Right, Top</span>
+check_pos = Location(<span class="dig">1156</span>, <span class="dig">596</span>)
+check_teamviewer = <span class="dig">0</span>
+check_battle = <span class="dig">0</span>
+
+kCountBattle = <span class="dig">1500</span>
+kCountTeamviewer = <span class="dig">15</span>
+
+<span class="kw">class</span> BattleTask(TimerTask):
+    <span class="kw">def</span> run(self):
+        <span class="kw">global</span> mode
+        <span class="kw">global</span> check_teamviewer, check_battle
+        <span class="cmt">#print("Timer task fired.")</span>
+
+        <span class="kw">if</span> check_teamviewer &gt; <span class="dig">0</span>:
+            check_teamviewer -= <span class="dig">1</span>
+        <span class="kw">if</span> check_teamviewer &gt; <span class="dig">0</span> <span class="kw">and</span> exists(<img src="1460954429422.png" />):
+            <span class="skw">click</span>(Pattern(<img src="1460954429422.png" />).targetOffset(<span class="dig">190</span>,<span class="dig">53</span>))
+
+
+        <span class="kw">if</span> mode &lt;= <span class="dig">0</span>:
+            <span class="kw">return</span>
+
+        <span class="kw">if</span> check_battle &gt; <span class="dig">0</span>:
+            check_battle -= <span class="dig">1</span>
+            <span class="cmt">#print("check_battle: %d" % check_battle)</span>
+
+        <span class="kw">if</span> check_battle &gt; <span class="dig">0</span> <span class="kw">and</span> exists(<img src="1460584421757.png" />):
+            self.battleMode()
+
+    <span class="kw">def</span> battleMode(self):
+        <span class="kw">if</span> mode == <span class="dig">2</span>: <span class="cmt">#Alliance</span>
+            <span class="cmt">#print('Alliance mode')</span>
+            a = random.choice(alliance_pos)
+            <span class="skw">click</span>(a)
+        <span class="kw">elif</span> mode == <span class="dig">1</span>: <span class="cmt">#Enemy</span>
+            <span class="cmt">#print('Enemy mode')</span>
+            b = random.sample(enemy_pos, <span class="dig">5</span>)
+            <span class="kw">for</span> a <span class="kw">in</span> b:
+                <span class="skw">click</span>(a)
+        <span class="kw">elif</span> mode == <span class="dig">4</span>: <span class="cmt">#Get current mouse pos</span>
+            <span class="kw">global</span> mouse_pos
+            <span class="cmt">#print('Current mouse pos')</span>
+            <span class="kw">if</span> mouse_pos:
+                <span class="skw">click</span>(mouse_pos)
+            <span class="kw">else</span>:
+                mouse_pos = Env.getMouseLocation()
+        <span class="kw">else</span>:
+            <span class="cmt">#print('In battle, do nothing')</span>
+            <span class="kw">pass</span>
+<span class="kw">class</span> MainFrame(java.lang.Runnable):
+    <span class="kw">def</span> __init__(self):
+        self.timer = None
+        self.frame = None
+
+    <span class="kw">def</span> run(self):
+        frame = JFrame(<span class="str">'MainFrame'</span>, defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE)
+        self.addButtons(frame.getContentPane())
+        frame.size = (<span class="dig">300</span>, <span class="dig">175</span>)
+        frame.visible = <span class="dig">1</span>
+
+        self.frame = frame
+        self.startTimerTask()
+
+    <span class="kw">def</span> startTimerTask(self):
+        <span class="kw">if</span> self.timer:
+            self.timer.cancel()
+
+        self.timer = Timer()
+        self.timer.schedule(BattleTask(), <span class="dig">100</span>, <span class="dig">5000</span>)
+
+    <span class="kw">def</span> stopTimerTask(self):
+        <span class="kw">if</span> self.timer:
+            self.timer.cancel()
+
+    <span class="kw">def</span> addButtons(self, container):
+        pane = JPanel()
+        pane.layout = BoxLayout(pane, BoxLayout.Y_AXIS)
+        pane.add(JButton(<span class="str">"Alliance"</span>, actionPerformed=self.clickAlliance))
+        pane.add(JButton(<span class="str">"Enemy"</span>, actionPerformed=self.clickEnemy))
+        pane.add(JButton(<span class="str">"None"</span>, actionPerformed=self.noMode))
+        pane.add(JButton(<span class="str">"CheckPos"</span>, actionPerformed=self.checkPos))
+        pane.add(JButton(<span class="str">"GetMousePos"</span>, actionPerformed=self.getCurrentPos))
+        pane.add(JButton(<span class="str">"Exit"</span>, actionPerformed=self.stop))
+        container.add(pane)
+
+    mode = <span class="dig">0</span>
+    <span class="kw">def</span> clickAlliance(self, event):
+        <span class="str">'''Click self hero or ...'''</span>
+        <span class="kw">print</span>(<span class="str">'Click Alliance'</span>)
+        <span class="kw">global</span> mode, check_teamviewer, check_battle
+        check_teamviewer = kCountTeamviewer
+        check_battle = kCountBattle
+
+        mode = <span class="dig">2</span>
+
+    <span class="kw">def</span> clickEnemy(self, event):
+        <span class="str">'''Click enemy'''</span>
+        <span class="kw">global</span> mode, check_teamviewer, check_battle
+        check_teamviewer = kCountTeamviewer
+        check_battle = kCountBattle
+
+        <span class="kw">print</span>(<span class="str">'Click enemy'</span>)
+        mode = <span class="dig">1</span>
+
+    <span class="kw">def</span> noMode(self,event):
+        <span class="kw">global</span> mode, check_teamviewer, check_battle
+
+        check_teamviewer = <span class="dig">0</span>
+        check_battle = <span class="dig">0</span>
+        mode = <span class="dig">0</span>
+        <span class="kw">print</span>(<span class="str">'No mode'</span>)
+
+    <span class="kw">def</span> checkPos(self,event):
+        <span class="kw">global</span> mode
+        mode = <span class="dig">0</span>
+        mouseMove(check_pos)
+
+    <span class="kw">def</span> getCurrentPos(self, event):
+        <span class="kw">global</span> mode
+        <span class="kw">print</span>(<span class="str">'Start to Get mouse pos'</span>)
+        mode = <span class="dig">4</span>
+        Thread.<span class="skw">sleep</span>(<span class="dig">3000</span>)
+        <span class="kw">print</span>(<span class="str">'Get mouse pos'</span>)
+        mouse_pos = Env.getMouseLocation()
+        <span class="kw">print</span>(<span class="str">'Current mouse pos: x:'</span> + mouse_pos.x + <span class="str">' y:'</span> + mouse_pos.y)
+
+    <span class="kw">def</span> stop(self, event):
+        <span class="kw">if</span> self.timer:
+            self.timer.cancel()
+        self.frame.dispose()
+        self.dispose()
+
+    <span class="kw">def</span> __del__(self):
+        <span class="kw">if</span> self.timer:
+            self.timer.cancel()
+
+        <span class="kw">print</span>(<span class="str">'Deconstructor'</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
+    EventQueue.invokeLater(MainFrame())
+</pre>
+</body>
+</html>
