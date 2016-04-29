@@ -85,11 +85,26 @@
 <span class="kw">from</span> threading <span class="kw">import</span> Thread
 <span class="kw">import</span> random
 
-items = <span class="dig">3</span>
+g_item_region = Region(<span class="dig">756</span>,<span class="dig">157</span>,<span class="dig">319</span>,<span class="dig">746</span>)
+g_item_count_default = <span class="dig">3600</span>
+g_item_count = <span class="dig">0</span>
+
+g_panel_region = Region(<span class="dig">1240</span>,<span class="dig">292</span>,<span class="dig">464</span>,<span class="dig">289</span>)
+
+running = True
+check_teamviewer = False
+
+teamviewer_count = <span class="dig">0</span>
+teamviewer_image = Pattern(<img src="1460954429422.png" />).targetOffset(<span class="dig">190</span>,<span class="dig">58</span>)
+
+g_task1_pattern = Pattern(<img src="g_task1_pattern.png" />).similar(<span class="dig">0.80</span>)
+g_task2_pattern = None
+
+g_act_count_default = <span class="dig">20</span>
 
 <span class="kw">class</span> ToolFrame(java.lang.Runnable):
     <span class="kw">def</span> run(self):
-        frame = JFrame(<span class="str">'MainFrame'</span>, defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE)
+        self.frame = frame = JFrame(<span class="str">'MainFrame'</span>, defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE)
         self.addButtons(frame.getContentPane())
         frame.size = (<span class="dig">300</span>, <span class="dig">175</span>)
         frame.visible = <span class="dig">1</span>
@@ -100,33 +115,185 @@ items = <span class="dig">3</span>
         pane = JPanel()
         pane.layout = BoxLayout(pane, BoxLayout.Y_AXIS)
 
-        pane.add(JButton(<span class="str">u"附加屬性"</span>, actionPerformed = self.task1))
-
+        pane.add(JButton(<span class="str">u"R1"</span>, actionPerformed = self.task1))
+        pane.add(JButton(<span class="str">u"R2"</span>, actionPerformed = self.task2))
+        pane.add(JButton(<span class="str">u"2 Items"</span>, actionPerformed = self.taskA2))
+        pane.add(JButton(<span class="str">u"開拓"</span>, actionPerformed = self.taskA3))
+        pane.add(JButton(<span class="str">u"Stop"</span>, actionPerformed = self.stop))
+        pane.add(JButton(<span class="str">u"Exit"</span>, actionPerformed = self.quit))
         container.add(pane)
 
-    <span class="kw">def</span> task1(self):
-        <span class="kw">global</span> items
-        <span class="kw">while</span> (items &gt; <span class="dig">0</span>):
-            <span class="kw">if</span> exists(<img src="1461368954522.png" />):
-                <span class="skw">doubleClick</span>(Pattern(<img src="1461368990463.png" />).similar(<span class="dig">0.80</span>))
-                <span class="skw">doubleClick</span>(Pattern(<img src="1461369010638.png" />).similar(<span class="dig">0.80</span>))
-                <span class="skw">wait</span>(<img src="1461369086629.png" />, <span class="dig">2</span>)
-                <span class="skw">click</span>(Pattern(<img src="1461369086629.png" />).similar(<span class="dig">0.80</span>).targetOffset(-<span class="dig">65</span>,<span class="dig">7</span>))
-                <span class="skw">wait</span>(<span class="dig">3</span>)
+    <span class="kw">def</span> doTask(self, target):
+        <span class="kw">global</span> running, g_item_count, teamviewer_count
+        running = True
+        g_item_count = g_item_count_default
 
-                items -= <span class="dig">1</span>
+        <span class="kw">if</span> check_teamviewer:
+            teamviewer_count = <span class="dig">120</span>
+        task = Thread(target=target)
+        task.start()
+
+    <span class="kw">def</span> task1(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        item1 = <img src="item1.png" />
+        g_task1_pattern = item1
+
+        self.doTask(my_task1)
+
+    <span class="kw">def</span> task2(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        item2 = Pattern(<img src="item2.png" />).similar(<span class="dig">0.80</span>)
+        g_task1_pattern = item2
+
+        self.doTask(my_task1)
 
 
+    <span class="kw">def</span> taskA2(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_task2_pattern, g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        mk1 = Pattern(<img src="mk1.png" />).similar(<span class="dig">0.80</span>)
+        mk2 = Pattern(<img src="1461888623122.png" />).similar(<span class="dig">0.80</span>)
+        g_task1_pattern = mk1
+        g_task2_pattern = mk2
 
+        self.doTask(my_task2)
 
+    <span class="kw">def</span> taskA3(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_act_count_default
+        g_act_count_default = <span class="dig">120</span>
+        drop1 = Pattern(<img src="drop1.png" />).similar(<span class="dig">0.80</span>)
+        g_task1_pattern = drop1
 
+        self.doTask(my_task3)
 
+    <span class="kw">def</span> stop(self, event):
+        <span class="kw">global</span> running
+        running = False
 
-    <span class="kw">def</span> stop(self):
-        self.dispose()
+    <span class="kw">def</span> quit(self, event):
+        <span class="kw">global</span> running
+        running = False
+        self.frame.dispose()
 
     <span class="kw">def</span> __del__(self):
         <span class="kw">print</span>(<span class="str">'Deconstructor'</span>)
+
+
+g_act_count = <span class="dig">0</span>
+<span class="kw">def</span> reset_act_count():
+    <span class="kw">global</span> g_act_count
+    g_act_count = g_act_count_default
+
+<span class="kw">def</span> act_count():
+    <span class="kw">global</span> g_act_count, running, g_item_count
+    g_item_count -= <span class="dig">1</span>
+    g_act_count -= <span class="dig">1</span>
+    <span class="kw">if</span> (g_act_count &lt; <span class="dig">0</span> <span class="kw">or</span> g_item_count &lt; <span class="dig">0</span>):
+        running = False
+
+pt_temp = Location(<span class="dig">645</span>, <span class="dig">505</span>)
+
+<span class="kw">def</span> my_panel():
+
+    btn = g_panel_region.exists(Pattern(<img src="1461627156036.png" />).similar(<span class="dig">0.85</span>).targetOffset(-<span class="dig">58</span>,<span class="dig">8</span>))
+    <span class="kw">if</span> btn:
+
+        g_panel_region.<span class="skw">doubleClick</span>(btn)
+        <span class="skw">wait</span>(<span class="dig">0.05</span>)
+        g_panel_region.<span class="skw">doubleClick</span>(btn)
+        reset_act_count()
+        mouseMove(pt_temp)
+            <span class="cmt">#print("3")</span>
+    <span class="kw">else</span>:
+        <span class="cmt">#print("4")    </span>
+        act_count()
+        <span class="skw">wait</span>(<span class="dig">1</span>)
+
+<span class="kw">def</span> check_teamviewer():
+    <span class="kw">global</span> teamviewer_count
+    <span class="kw">if</span> teamviewer_count &gt; <span class="dig">0</span>:
+        teamviewer_count -= <span class="dig">1</span>
+        tv = exists(teamviewer_image)
+        <span class="kw">if</span> tv:
+            <span class="skw">doubleClick</span>(tv)
+
+
+<span class="kw">def</span> my_task1():
+    switchApp(<span class="str">u"魔力寶貝II"</span>)
+    <span class="kw">global</span> g_item_count, g_item_region
+    <span class="kw">while</span> (running <span class="kw">and</span> g_item_count &gt; <span class="dig">0</span>):
+        check_teamviewer()
+
+        item = g_item_region.exists(g_task1_pattern)
+        <span class="kw">if</span> item:
+            <span class="skw">doubleClick</span>(item)
+            <span class="skw">wait</span>(<span class="dig">0.05</span>)
+            <span class="skw">doubleClick</span>(item)
+            mouseMove(pt_temp)
+            reset_act_count()
+            <span class="cmt">#print("1")</span>
+
+        <span class="kw">if</span> (running == False):
+            <span class="kw">break</span>
+
+        <span class="cmt">#print("2")</span>
+        my_panel()
+
+<span class="kw">def</span> my_task2():
+    switchApp(<span class="str">u"魔力寶貝II"</span>)
+    <span class="kw">global</span> g_item_count, g_item_region
+    <span class="kw">while</span> (running <span class="kw">and</span> g_item_count &gt; <span class="dig">0</span>):
+        check_teamviewer()
+
+        item = g_item_region.exists(g_task1_pattern)
+        <span class="kw">if</span> item:
+            <span class="skw">doubleClick</span>(item)
+            <span class="skw">wait</span>(<span class="dig">0.05</span>)
+            <span class="skw">doubleClick</span>(item)
+            mouseMove(pt_temp)
+            reset_act_count()
+            <span class="cmt">#print("1")</span>
+
+        item = g_item_region.exists(g_task2_pattern)
+        <span class="kw">if</span> item:
+            <span class="skw">doubleClick</span>(item)
+            <span class="skw">wait</span>(<span class="dig">0.05</span>)
+            <span class="skw">doubleClick</span>(item)
+            mouseMove(pt_temp)
+            reset_act_count()
+            <span class="cmt">#print("1")</span>
+
+        <span class="kw">if</span> (running == False):
+            <span class="kw">break</span>
+
+        <span class="cmt">#print("2")</span>
+        my_panel()
+
+<span class="kw">def</span> my_task3():
+    switchApp(<span class="str">u"魔力寶貝II"</span>)
+    <span class="kw">global</span> g_item_count, g_item_region
+    <span class="kw">while</span> (running <span class="kw">and</span> g_item_count &gt; <span class="dig">0</span>):
+        check_teamviewer()
+
+        <span class="kw">for</span> i <span class="kw">in</span> range(<span class="dig">6</span>):
+            item = g_item_region.exists(g_task1_pattern)
+            <span class="kw">if</span> item <span class="kw">and</span> running:
+                <span class="skw">doubleClick</span>(item)
+                <span class="skw">wait</span>(<span class="dig">0.1</span>)
+                <span class="skw">doubleClick</span>(item)
+                mouseMove(pt_temp)
+                <span class="skw">wait</span>(<span class="dig">0.1</span>)
+                reset_act_count()
+            <span class="kw">else</span>:
+                <span class="kw">break</span>
+
+        <span class="kw">if</span> (running == False):
+            <span class="kw">break</span>
+
+        <span class="cmt">#print("2")</span>
+        my_panel()
 
 <span class="kw">if</span> __name__ == <span class="str">'__main__'</span>:
      EventQueue.invokeLater(ToolFrame())

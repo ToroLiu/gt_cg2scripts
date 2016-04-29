@@ -134,7 +134,7 @@ class MainFrame(java.lang.Runnable):
     def noMode(self,event):
         global mode, check_teamviewer, check_battle
         
-        check_teamviewer = 0
+        check_teamviewer = 30
         check_battle = 0
         mode = 0
         print('No mode')
