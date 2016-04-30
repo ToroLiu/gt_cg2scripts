@@ -76,7 +76,7 @@
 <span class="kw">from</span> javax.swing <span class="kw">import</span> JButton
 <span class="kw">from</span> javax.swing <span class="kw">import</span> JPanel
 <span class="kw">from</span> javax.swing <span class="kw">import</span> BoxLayout
-<span class="kw">from</span> java.awt <span class="kw">import</span> EventQueue
+<span class="kw">from</span> java.awt <span class="kw">import</span> *
 <span class="kw">from</span> java.lang <span class="kw">import</span> *
 
 <span class="kw">from</span> java.util <span class="kw">import</span> Timer
@@ -85,11 +85,11 @@
 <span class="kw">from</span> threading <span class="kw">import</span> Thread
 <span class="kw">import</span> random
 
-g_item_region = Region(<span class="dig">756</span>,<span class="dig">157</span>,<span class="dig">319</span>,<span class="dig">746</span>)
+g_item_region = Region(<span class="dig">632</span>,<span class="dig">119</span>,<span class="dig">498</span>,<span class="dig">780</span>)
 g_item_count_default = <span class="dig">3600</span>
 g_item_count = <span class="dig">0</span>
 
-g_panel_region = Region(<span class="dig">1240</span>,<span class="dig">292</span>,<span class="dig">464</span>,<span class="dig">289</span>)
+g_panel_region = Region(<span class="dig">1189</span>,<span class="dig">300</span>,<span class="dig">517</span>,<span class="dig">419</span>)
 
 running = True
 check_teamviewer = False
@@ -97,8 +97,9 @@ check_teamviewer = False
 teamviewer_count = <span class="dig">0</span>
 teamviewer_image = Pattern(<img src="1460954429422.png" />).targetOffset(<span class="dig">190</span>,<span class="dig">58</span>)
 
-g_task1_pattern = Pattern(<img src="g_task1_pattern.png" />).similar(<span class="dig">0.80</span>)
+g_task1_pattern = None
 g_task2_pattern = None
+g_task_list = None
 
 g_act_count_default = <span class="dig">20</span>
 
@@ -106,7 +107,7 @@ g_act_count_default = <span class="dig">20</span>
     <span class="kw">def</span> run(self):
         self.frame = frame = JFrame(<span class="str">'MainFrame'</span>, defaultCloseOperation = JFrame.DISPOSE_ON_CLOSE)
         self.addButtons(frame.getContentPane())
-        frame.size = (<span class="dig">300</span>, <span class="dig">175</span>)
+        frame.size = (<span class="dig">180</span>, <span class="dig">450</span>)
         frame.visible = <span class="dig">1</span>
 
         self.frame = frame
@@ -117,7 +118,11 @@ g_act_count_default = <span class="dig">20</span>
 
         pane.add(JButton(<span class="str">u"R1"</span>, actionPerformed = self.task1))
         pane.add(JButton(<span class="str">u"R2"</span>, actionPerformed = self.task2))
-        pane.add(JButton(<span class="str">u"2 Items"</span>, actionPerformed = self.taskA2))
+        pane.add(JButton(<span class="str">u"R3"</span>, actionPerformed = self.task3))
+        pane.add(JButton(<span class="str">u"R4"</span>, actionPerformed = self.task4))
+        pane.add(JButton(<span class="str">u"R5"</span>, actionPerformed = self.task5))
+        pane.add(JButton(<span class="str">u"2 Items"</span>, actionPerformed = self.taskAA2))
+        pane.add(JButton(<span class="str">u"3 Items"</span>, actionPerformed = self.taskAA3))
         pane.add(JButton(<span class="str">u"開拓"</span>, actionPerformed = self.taskA3))
         pane.add(JButton(<span class="str">u"Stop"</span>, actionPerformed = self.stop))
         pane.add(JButton(<span class="str">u"Exit"</span>, actionPerformed = self.quit))
@@ -136,7 +141,8 @@ g_act_count_default = <span class="dig">20</span>
     <span class="kw">def</span> task1(self, event):
         <span class="kw">global</span> g_task1_pattern, g_act_count_default
         g_act_count_default = <span class="dig">20</span>
-        item1 = <img src="item1.png" />
+        item1 = Pattern(<img src="item1.png" />).similar(<span class="dig">0.80</span>)
+
         g_task1_pattern = item1
 
         self.doTask(my_task1)
@@ -149,21 +155,58 @@ g_act_count_default = <span class="dig">20</span>
 
         self.doTask(my_task1)
 
-
-    <span class="kw">def</span> taskA2(self, event):
-        <span class="kw">global</span> g_task1_pattern, g_task2_pattern, g_act_count_default
+    <span class="kw">def</span> task3(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_act_count_default
         g_act_count_default = <span class="dig">20</span>
-        mk1 = Pattern(<img src="mk1.png" />).similar(<span class="dig">0.80</span>)
-        mk2 = Pattern(<img src="1461888623122.png" />).similar(<span class="dig">0.80</span>)
+        item3 = Pattern(<img src="item3.png" />).similar(<span class="dig">0.85</span>)
+        g_task1_pattern = item3
+
+        self.doTask(my_task1)
+
+    <span class="kw">def</span> task4(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        item4 = Pattern(<img src="item4.png" />).similar(<span class="dig">0.85</span>)
+
+        g_task1_pattern = item4
+
+        self.doTask(my_task1)
+
+    <span class="kw">def</span> task5(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        item5 = Pattern(<img src="item5.png" />).similar(<span class="dig">0.80</span>)
+        g_task1_pattern = item5
+
+        self.doTask(my_task1)
+
+    <span class="kw">def</span> taskAA2(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_task2_pattern, g_task_list
+        <span class="kw">global</span> g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        mk1 = Pattern(<img src="mk1.png" />).similar(<span class="dig">0.85</span>)
+        mk2 = Pattern(<img src="1461888623122.png" />).similar(<span class="dig">0.85</span>)
         g_task1_pattern = mk1
         g_task2_pattern = mk2
+        g_task_list = [mk1, mk2]
+
+        self.doTask(my_task2)
+
+    <span class="kw">def</span> taskAA3(self, event):
+        <span class="kw">global</span> g_task1_pattern, g_task2_pattern, g_task_list
+        <span class="kw">global</span> g_act_count_default
+        g_act_count_default = <span class="dig">20</span>
+        a3mk1 = Pattern(<img src="a3mk1.png" />).similar(<span class="dig">0.85</span>).targetOffset(<span class="dig">7</span>,-<span class="dig">1</span>)
+        a3mk2 = Pattern(<img src="1461888623122.png" />).similar(<span class="dig">0.85</span>)
+        a3mk3 = Pattern(<img src="a3mk3.png" />).similar(<span class="dig">0.85</span>)
+        g_task_list = [a3mk1, a3mk2, a3mk3]
 
         self.doTask(my_task2)
 
     <span class="kw">def</span> taskA3(self, event):
         <span class="kw">global</span> g_task1_pattern, g_act_count_default
         g_act_count_default = <span class="dig">120</span>
-        drop1 = Pattern(<img src="drop1.png" />).similar(<span class="dig">0.80</span>)
+        drop1 = Pattern(<img src="drop1.png" />).similar(<span class="dig">0.85</span>).targetOffset(-<span class="dig">1</span>,-<span class="dig">1</span>)
         g_task1_pattern = drop1
 
         self.doTask(my_task3)
@@ -180,6 +223,12 @@ g_act_count_default = <span class="dig">20</span>
     <span class="kw">def</span> __del__(self):
         <span class="kw">print</span>(<span class="str">'Deconstructor'</span>)
 
+<span class="kw">def</span> stopHandler():
+    <span class="kw">global</span> running
+    running = False
+    <span class="kw">print</span>(<span class="str">'stopHandler'</span>)
+
+Env.addHotkey(Key.ESC,KeyModifier.CTRL, stopHandler)
 
 g_act_count = <span class="dig">0</span>
 <span class="kw">def</span> reset_act_count():
@@ -199,13 +248,13 @@ pt_temp = Location(<span class="dig">645</span>, <span class="dig">505</span>)
 
     btn = g_panel_region.exists(Pattern(<img src="1461627156036.png" />).similar(<span class="dig">0.85</span>).targetOffset(-<span class="dig">58</span>,<span class="dig">8</span>))
     <span class="kw">if</span> btn:
-
-        g_panel_region.<span class="skw">doubleClick</span>(btn)
-        <span class="skw">wait</span>(<span class="dig">0.05</span>)
-        g_panel_region.<span class="skw">doubleClick</span>(btn)
+        pt = btn.getTarget()
+        g_panel_region.<span class="skw">doubleClick</span>(pt)
+        mouseMove(pt.offset(<span class="dig">5</span>,<span class="dig">0</span>))
+        g_panel_region.<span class="skw">doubleClick</span>(pt.offset(-<span class="dig">1</span>,<span class="dig">0</span>))
         reset_act_count()
-        mouseMove(pt_temp)
-            <span class="cmt">#print("3")</span>
+        mouseMove(pt.offset(-<span class="dig">200</span>,<span class="dig">0</span>))
+        <span class="kw">return</span>
     <span class="kw">else</span>:
         <span class="cmt">#print("4")    </span>
         act_count()
@@ -228,9 +277,10 @@ pt_temp = Location(<span class="dig">645</span>, <span class="dig">505</span>)
 
         item = g_item_region.exists(g_task1_pattern)
         <span class="kw">if</span> item:
-            <span class="skw">doubleClick</span>(item)
-            <span class="skw">wait</span>(<span class="dig">0.05</span>)
-            <span class="skw">doubleClick</span>(item)
+            pt = item.getTarget()
+            <span class="skw">doubleClick</span>(pt)
+            mouseMove(pt.offset(-<span class="dig">3</span>,<span class="dig">0</span>))
+            <span class="skw">doubleClick</span>(pt.offset(<span class="dig">2</span>,<span class="dig">0</span>))
             mouseMove(pt_temp)
             reset_act_count()
             <span class="cmt">#print("1")</span>
@@ -246,24 +296,18 @@ pt_temp = Location(<span class="dig">645</span>, <span class="dig">505</span>)
     <span class="kw">global</span> g_item_count, g_item_region
     <span class="kw">while</span> (running <span class="kw">and</span> g_item_count &gt; <span class="dig">0</span>):
         check_teamviewer()
-
-        item = g_item_region.exists(g_task1_pattern)
-        <span class="kw">if</span> item:
-            <span class="skw">doubleClick</span>(item)
-            <span class="skw">wait</span>(<span class="dig">0.05</span>)
-            <span class="skw">doubleClick</span>(item)
-            mouseMove(pt_temp)
-            reset_act_count()
-            <span class="cmt">#print("1")</span>
-
-        item = g_item_region.exists(g_task2_pattern)
-        <span class="kw">if</span> item:
-            <span class="skw">doubleClick</span>(item)
-            <span class="skw">wait</span>(<span class="dig">0.05</span>)
-            <span class="skw">doubleClick</span>(item)
-            mouseMove(pt_temp)
-            reset_act_count()
-            <span class="cmt">#print("1")</span>
+        <span class="cmt">#print("000")</span>
+        <span class="kw">for</span> pattern <span class="kw">in</span> g_task_list:
+            item = g_item_region.exists(pattern)
+            <span class="kw">if</span> item <span class="kw">and</span> running:
+                pt = item.getTarget()
+                <span class="skw">doubleClick</span>(pt)
+                mouseMove(pt.offset(-<span class="dig">3</span>,<span class="dig">0</span>))
+                <span class="skw">doubleClick</span>(pt.offset(<span class="dig">2</span>,<span class="dig">0</span>))
+                mouseMove(pt_temp)
+                reset_act_count()
+                <span class="cmt">#print("001")</span>
+            <span class="cmt">#print("002")</span>
 
         <span class="kw">if</span> (running == False):
             <span class="kw">break</span>
@@ -280,11 +324,13 @@ pt_temp = Location(<span class="dig">645</span>, <span class="dig">505</span>)
         <span class="kw">for</span> i <span class="kw">in</span> range(<span class="dig">6</span>):
             item = g_item_region.exists(g_task1_pattern)
             <span class="kw">if</span> item <span class="kw">and</span> running:
-                <span class="skw">doubleClick</span>(item)
-                <span class="skw">wait</span>(<span class="dig">0.1</span>)
-                <span class="skw">doubleClick</span>(item)
+                pt = item.getTarget()
+                <span class="skw">doubleClick</span>(pt)
+                mouseMove(pt.offset(<span class="dig">5</span>,<span class="dig">0</span>))
+                <span class="skw">doubleClick</span>(pt.offset(<span class="dig">3</span>,<span class="dig">0</span>))
+                mouseMove(pt.offset(<span class="dig">5</span>,<span class="dig">0</span>))
+                <span class="skw">doubleClick</span>(pt.offset(-<span class="dig">3</span>,<span class="dig">0</span>))
                 mouseMove(pt_temp)
-                <span class="skw">wait</span>(<span class="dig">0.1</span>)
                 reset_act_count()
             <span class="kw">else</span>:
                 <span class="kw">break</span>
